@@ -22,8 +22,8 @@ public interface EmpMapper {
 	// 수정
 	//보통 단일로 하면 매개변수 하나. 쿼리문이 내부적으로 조인을 하거나 복잡할 때 두 개의 VO가 필요한 경우가 있음. 기본적으로 마이바티스는 하나로 처리하는데 이 때는 마이바티스쪽에서 예외사항으로 파악함. 
 	//한 객체에 대한 정보가 통째로 필요하니 VO
-	public int updateEmpInfo(@Param("")int empId, 
-								@Param("")EmpVO empVO); 
+	public int updateEmpInfo(@Param("eid")int empId, 
+								@Param("emp")EmpVO empVO); 
 	
 	// 삭제
 	public int deleteEmpInfo(int empId);
