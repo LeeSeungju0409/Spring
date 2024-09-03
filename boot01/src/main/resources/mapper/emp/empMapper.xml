@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.emp.mapper.EmpMapper">
+	<!-- 전체 조회 -->
+	<select id="selectEmpAllList" resultType="EmpVO">
+		SELECT employee_id
+        		, first_name
+        		, last_name
+        		, email
+        		, phone_number
+        		, hire_date
+        		, job_id
+        		, salary
+        		, commission_pct
+        		, manager_id
+        		, department_id
+		FROM employees
+		ORDER BY employee_id
+	</select>
+	
+	<!-- 단건 조회 -->
+	<select id="selectEmpInfo" resultType="EmpVO">
+		SELECT employee_id
+        		, first_name
+        		, last_name
+        		, email
+        		, phone_number
+        		, hire_date
+        		, job_id
+        		, salary
+        		, commission_pct
+        		, manager_id
+        		, department_id
+		FROM employees
+		WHERE employee_id = #{employeeId}
+		<!-- #{} : 데이터 타입에 따른 추가작업. (따옴표 붙일건지 안붙일건지. 숫자나 정수는 안씀. 그 부분을 구분해주는 게 #) 
+			 ${} : 데이터 타입과 무관, '' 없이 진행. -->
+	</select>
+	
+	<!-- 등록 -->
+	<insert id="insertEmpInfo" parameterType="EmpVO">
+	
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateEmpInfo">
+	
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteEmpInfo" parameterType="int">
+	
+	</delete>
+</mapper>
