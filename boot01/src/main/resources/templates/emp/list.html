@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="https://www.thymeleaf.org/">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="ctxPath" th:value="${contextPath}">
+
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
+<!-- 페이지 전체에서 쓸 수 있도록 meta로 이렇게 하면 개발자 도구 head에서 확인해보면 /yedam이라는 경로가 설정됨.-->
 
+	<div>
+		<h3>전체 사원 조회</h3>
+		<table>
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>사원번호</th>
+					<th>이름</th>
+					<th>입사일자</th>
+					<th>업무</th>																			
+				</tr>
+			</thead>
+			<tbody>
+				<th:block th:each="info, sts : ${emps}">
+					<!-- info <=> EmpVO => <tr/> -->
+					<!-- 반복하고자 하는 코드 -->
+					<!-- || 사이에거는 해석하라는 뜻. $표시된부분은 해석못함. -->
+					<!-- 그래서 물음표 들어갈 자리부터 괄호를 넣음. 괄호 안에서는 $표현식 쓸 수 있다. 괄호 뒤 부터는 경로는 끝났고 다른 표현이 들어가는구나 하는거임. -->
+					<!-- 이벤트 버블링으로 강제연동될 수 있기때문에 onclick같은거 잘 안씀. -->
+					<!--/* <tr th:onclick="|location.href='@{/empInfo(employeeId=${info.employeeId})}'|"> */-->
+					<!-- => 두 개 돌면 헷갈리니까 주석처리한 것. -->
+					<tr>
+						<td>[[${sts.count}]]</td>
+						<td th:text="${info.employeeId}" />
+						<td th:text="${info.lastName}"/>
+						<!--/* <td>입사일자 : [[ ${info.hireDate} ]]</td> */-->
+						<td>[[ ${ #dates.format(info.hireDate, "yyyy년 MM월 dd일" ) }]]</td>
+						<td>[[ ${ emps[sts.index].jobId } ]]</td>
+					</tr>
+				</th:block>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		const context = $('meta[name="ctxPath"]').attr('value'); // val();
+		$('tbody > tr').on('click', function(event){
+			let trTag = event.currentTarget;
+			let eid = $(trTag).children().eq(1).text(); // tr태그 안에 있는 두 번째를 찾음.
+			let url = context + '/empInfo?employeeId=' + eid;
+			location.href=url;
+		});
+	</script>
 </body>
 </html>

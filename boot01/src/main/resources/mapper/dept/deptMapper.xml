@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.dept.mapper.DeptMapper">
+	<!-- public List<DeptVO> selectDeptAll(); 이거 연결할거니까 -->
+	<!-- 전체 조회 -->
+	<!-- 매서드 정보와 일치해야 함. -->
+	<select id="selectDeptAll" resultType="DeptVO">
+		SELECT department_id
+        	, department_name
+        	, manager_id
+        	, location_id
+		FROM departments
+		ORDER BY department_id
+	</select>
+</mapper>

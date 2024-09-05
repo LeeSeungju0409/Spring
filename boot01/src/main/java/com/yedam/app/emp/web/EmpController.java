@@ -40,7 +40,7 @@ public class EmpController { //위에거 헷갈리면 그냥 이렇게.
 		// 1) 기능 수행 => Service
 		List<EmpVO> list = empService.empList();
 		// 2) 클라이언트에 전달할 데이터 담기
-		model.addAttribute("emps", list);
+		model.addAttribute("emps", list); // 타임리프 할때 이 부분 주의 / 파일 열때 데이터 전달하기위한 메소드여서. //list가 아니라 "emps" 이걸로 호출. //th:block에서
 		return "emp/list"; // 3) 데이터를 출력할 페이지 결정 
 		// 슬러시 붙여서 /emp/list 이렇게 하면 /templates//emp/list.html 이렇게 되기 때문에 return에서는 /붙으면 안됨.
 		// prefix + return + suffix => 실제 경로 / ViewResolver
@@ -48,12 +48,13 @@ public class EmpController { //위에거 헷갈리면 그냥 이렇게.
 		
 	}
 	// 단건조회 : Get => QueryString, employeeId(커맨드 객체 or @RequestParam)
-	@GetMapping("empInfo")
+	@GetMapping("empInfo") // empInfo?key=value //key에 employeeId가 넘어가야 함./?key=value > 쿼리스트링.
 	public String empInfo(EmpVO empVO, Model model) {
 		EmpVO findVO = empService.empInfo(empVO);
 		model.addAttribute("emp", findVO);
 		// HttpServletRequest.setAttribute();
 		return "emp/info";
+		// classpath:/templates/emp/info.html => 실제 경로
 	}
 	
 	
@@ -84,7 +85,7 @@ public class EmpController { //위에거 헷갈리면 그냥 이렇게.
 	
 	
 	// 수정 - 페이지 : Get, 조건이 필요 <=> 단건조회
-	@GetMapping("empUpdate")
+	@GetMapping("empUpdate") // empUpdate?employeeId=value
 	public String empUpdateForm(EmpVO empVO, Model model) {
 			EmpVO findVO = empService.empInfo(empVO);
 			model.addAttribute("emp", findVO);
@@ -94,7 +95,7 @@ public class EmpController { //위에거 헷갈리면 그냥 이렇게.
 	
 	
 	// 수정 - 처리 : AJAX => QueryString
-	@PostMapping("empUpdate")
+	//@PostMapping("empUpdate")
 	@ResponseBody // AJAX
 	public Map<String, Object>
 		empUpdateAJAXQueryString(EmpVO empVO){
@@ -102,7 +103,7 @@ public class EmpController { //위에거 헷갈리면 그냥 이렇게.
 	}
 	
 	// 수정 - 처리 : AJAX => JSON (@RequestBody)
-	//@PostMapping("empUpdate")
+	@PostMapping("empUpdate")
 	@ResponseBody // AJAX
 	public Map<String, Object>
 		empUpdateAJAXJSON(@RequestBody EmpVO empVO){
@@ -110,7 +111,7 @@ public class EmpController { //위에거 헷갈리면 그냥 이렇게.
 	}
 	
 	// 삭제 - 처리 : Get => Querystring( @RequestParam ) // 웬만하면 AJAX 안 씀
-	@GetMapping("empDelete")
+	@GetMapping("empDelete") //empDelete?employeeId=value
 	public String empDelete(Integer employeeId) {
 		empService.empDelete(employeeId);
 		return "redirect:empList";
