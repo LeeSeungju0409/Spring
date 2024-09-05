@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>타임리프 테스트</h1>
+	<th:block th:each="num, sts : ${ #numbers.sequence(1,5) }">
+	 <!-- 두 번째 반복문(sts)에 현재 상태값(index)이 들어갈거임. -->
+		<p th:text="${sts.index}"/>
+		<!-- 두 번째 반복문(sts)에 짝수값(even)이 들어갈거임. -->
+		<p th:text="${sts.even}"/>
+		<p th:text="${sts.count}"/>
+	</th:block>
+	<p th:text="${emp.lastName + '님'}"/>
+	<a th:href="@{/empList}">전체조회</a>
+	<a href="/empList">전체조회</a>
+</body>
+</html>

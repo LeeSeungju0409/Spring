@@ -2,6 +2,8 @@ package com.yedam.app.emp.service;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +20,7 @@ public class EmpVO {
 	private String lastName;    	// 성 : Not Null
 	private String email; 			// 이메일 : Not Null
 	private String phoneNumber; 	// 연락처
+	@DateTimeFormat(pattern = "yyyy-MM-dd") // 핸들러 어뎁터가 씀. 알려주는거임. 우리가 직접적으로는 못씀.
 	private Date hireDate; 			// 입사일자 : Not Null
 	private String jobId;  			// 업무 : Not Null, Foreign Key
 	private Double salary; 			// 급여 : > 0
