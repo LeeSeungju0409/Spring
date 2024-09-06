@@ -1,25 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
-<head>
-<meta charset="UTF-8">
-<meta name="ctxPath" th:value="${contextPath}">
-
-<title></title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-</head>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<!-- layout, decorate, fragment 가 default_layout의 	<main layout:fragment="Content"></main>와 연결된다. -->
 <body>
-<!-- 페이지 전체에서 쓸 수 있도록 meta로 이렇게 하면 개발자 도구 head에서 확인해보면 /yedam이라는 경로가 설정됨.-->
+	<!-- 페이지 전체에서 쓸 수 있도록 meta로 이렇게 하면 개발자 도구 head에서 확인해보면 /yedam이라는 경로가 설정됨.-->
 
-	<div>
+	<div class="container">
 		<h3>전체 사원 조회</h3>
-		<table>
+		<table class="table">
 			<thead>
 				<tr>
 					<th>No.</th>
 					<th>사원번호</th>
 					<th>이름</th>
 					<th>입사일자</th>
-					<th>업무</th>																			
+					<th>업무</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,7 +31,7 @@
 					<tr>
 						<td>[[${sts.count}]]</td>
 						<td th:text="${info.employeeId}" />
-						<td th:text="${info.lastName}"/>
+						<td th:text="${info.lastName}" />
 						<!--/* <td>입사일자 : [[ ${info.hireDate} ]]</td> */-->
 						<td>[[ ${ #dates.format(info.hireDate, "yyyy년 MM월 dd일" ) }]]</td>
 						<td>[[ ${ emps[sts.index].jobId } ]]</td>
@@ -45,11 +42,11 @@
 	</div>
 	<script>
 		const context = $('meta[name="ctxPath"]').attr('value'); // val();
-		$('tbody > tr').on('click', function(event){
+		$('tbody > tr').on('click', function(event) {
 			let trTag = event.currentTarget;
 			let eid = $(trTag).children().eq(1).text(); // tr태그 안에 있는 두 번째를 찾음.
 			let url = context + '/empInfo?employeeId=' + eid;
-			location.href=url;
+			location.href = url;
 		});
 	</script>
 </body>
