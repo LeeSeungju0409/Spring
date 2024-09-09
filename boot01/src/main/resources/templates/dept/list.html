@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
 <title></title>
@@ -12,17 +15,31 @@
 				<tr>
 					<th>부서번호</th>
 					<th>부서명</th>
+					<th>부서책임자번호</th>
+					<th>위치 번호</th>
 				</tr>
 			</thead>
 			<tbody>
-				<th:block th:each="info : ${depts}">
+				<th:block th:each="info, sts : ${depts}">
 					<tr>
-						<td>[[ ${info.departmentId} ]]</td>
-						<td>[[ ${info.departmentName} ]]</td>
+						<td>[[${sts.count}]]</td>
+						<td th:text="${info.departmentId}" />
+						<td th:text="${info.departmentName}" />
+						<td th:text="${info.managerId}" />
+						<td th:text="${info.locationId}" />
 					</tr>
 				</th:block>
 			</tbody>
 		</table>
 	</div>
+		<script>
+		const context = $('meta[name="ctxPath"]').attr('value'); // val();
+		$('tbody > tr').on('click', function(event) {
+			let trTag = event.currentTarget;
+			let did = $(trTag).children().eq(1).text(); // tr태그 안에 있는 두 번째를 찾음.
+			let url = context + '/deptInfo?departmentId=' + did;
+			location.href = url;
+		});
+	</script>
 </body>
 </html>

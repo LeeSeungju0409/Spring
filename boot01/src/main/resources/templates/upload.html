@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AJAX</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+	<div>
+		<input type="file" name="uploadFiles" multiple>
+		<button class="uploadBtn">upload</button>
+	</div>
+	<script>
+		$('.uploadBtn').on('click', function(event){ // 아작스로 할 거여서 폼으로 안했음.
+			let formData = new FormData(); // FormData: 아작스를 위해 만들어진 통신 객체.
+			// 유사) jQuery.serializeArray();
+			// 1) <from/>태그 내부의 입력태그 정보를 한번에 받음
+			// 2) AJAX를 이용하여 'Content-type:multipart/form-data'를 보내는 경우 -> FormData 클래스.
+			
+			let input = $(event.currentTarget).prev()[0];
+			let fileList = input.files; //files여기서 값을 받아와서 for문을 돌리는 거임. input태그에서 multiple이 등록되어있어서 가능.
+			
+			for(let file of fileList){
+				formData.append(input.name, file); // append: map이 가지고있는 폼 매서드와 비슷함. 근데 이건 한 개의 키가 여러개의 값을 가질 수 있음.
+			}
+			
+			console.log(formData.get("uploadFiles"));
+			
+			fetch('uploadsAjax', {
+				method : 'post',
+				/* application/json은
+				headers : {
+					'content-type' : 'application/json'
+				},
+				body : JSON.stringify({})
+				이렇게 넘김. fetch는 body에 적용되는 클래스가 어떤가에 따라 이용하는게 달라짐.
+				폼데이터는 fetch쓰는게 제일 쉽긴 함.
+				*/
+				body : formData // URLSearchParams 클래스를 이용해서 아작스 보내면 되는데 컨텐트 타입 별도 지정 없음. 
+											//JSON만 컨텐트타입을 어플리케이션.제이슨으로 변환해야함.
+											// fetch는 바디에 들어가는 통신정보를 어쩌고해서 클래스를 어쩌고한다,
+											/* 
+											   application/x-www-form-urlencoded : URLSearchParams(클래스)       /쿼리스트림
+											   multipart/form-data : FormData(클래스)
+											   application/json은 아예 종류가 좀 다름.
+											*/
+			})
+			.then(res => res.json()) // 서버가 보낸 데이터를 파싱하는 작업. 얘 없으면 동작 안한다. res는 패치꺼. 프로밋?꺼가 아님.
+			.then(result => {
+				console.log(result);
+			})
+			.catch(err => console.log(err)); // body에 formData를 들고있기 때문에 fetch사용할 경우 별도의 컨텐트타입 필요없음.
+			
+			$.ajax('uploadsAjax',{
+				type : 'post',				
+				data : formData,     // data 속성의 값(객체 타입)을
+				processData : false, // QueryString으로 변환하는 설정 //기본 설정 말고 formData로 정보를 하고싶으면 이 밑애 두 개를 false하는 거임.
+				contentType : false  // 기본 contentType을 사용하지 않겠다고 설정 //false 쓰면 jquery가 설정한 컨탠트타입(application/x-www-form-urlencoded)을 어느것도 사용하지 않겠다 라는 뜻(무력화).
+			})
+			.done(result => {
+				for (let image of result){
+					let imgTag = `<img src='/imgs/${image}' style="width : 50%;">`; // application.properties에서 context-path설정되어있으면 그 경로 / WebMVCConfig에서 설정한 addResourceHandler 경로/ 이렇게 경로 설정한거임.// context-path 있으면 /yedam/imgs/${image} 이런식.
+					$('div').append(imgTag);
+					// 이 두개는 서버가 경로를 돌려받은 걸 자동으로 img태그를 생성해서 간단히 미리보기를 출력하는 거.
+					// 서버에서 접근할 수 있도록 설정해야 함.
+					
+				}
+			})
+			.fail(err => console.log(err));
+		});
+		
+	</script>
+</body>
+</html>

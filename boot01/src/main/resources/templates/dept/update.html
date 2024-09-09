@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- <th:block th:replace="~{common/configs/default_config :: jqueryConfig}"></th:block>
+ -->
+<body>
+	<form name="updateForm" th:object="${dept}">
+		<h3>부서 정보 등록</h3>
+		<div>
+			<label for="did">부서번호</label> <input type="number" id="did"
+				th:field="*{departmentId}" readonly>
+		</div>
+		<div>
+			<label for="dname">부서이름</label> <input type="text" id="dname"
+				name="departmentName" th:value="${dept.departmentName}">
+				
+		</div>
+		<div>
+			<label for="dmanagerId">부서 책임자 사원번호</label> <input type="number" id="dmanagerId"
+				th:field="*{managerId}">
+		</div>
+		<div>
+			<label for="dlocationId">위치 번호</label> <input type="number" id="dlocationId"
+				th:field="*{locationId}">
+		</div>
+		<div>
+			<button type="button" id="updateBtn">저장</button>
+		</div>
+	</form>
+	<script>
+		$('#updateBtn').on('click', updateAjax);
+		
+		function updateAjax(event){
+			// 1) 보낼 데이터 가져오기
+			let dataObj = getFormData();
+			// 2) AJAX
+			$.ajax("deptUpdate", {
+				type : 'post', //method
+				//data : dataObj // 객체 => QueryString
+				
+				//JSON : @RequestBody 선언되어있을 때 이 방식.
+				contentType : 'application/json', 
+				data:JSON.stringify(dataObj)
+				// JSON.stringify와 application/json는 한 몸. 함께 움직인다.
+			})
+			.done((result)=>{
+				console.log(result);
+			})
+			.done((data)=>{
+				//return 'result : ' + data.result;
+				if(data.result){
+					alert('성공적으로 수정되었습니다.');
+					
+				}else{
+					alert('수정되지 않았습니다.');
+				}
+			})
+			.fail((err)=>console.log(err));
+			
+		}
+		
+		function getFormData(){
+			// 폼 태그를 하나 지정하게 되면 그 안에있는 value 속성을 배열로 받음.
+			let formAry = $('form[name="updateForm"]').serializeArray();
+			/*
+				[{ name : "employeeId", value : "100"},
+				 { name : "lastName", value : "King"},
+				  ...]
+			*/
+			/* 위에껄 이렇게 바꾸는 작업이 필요함.
+				{ "employeeId" : 100, "lastName" : "King", ...} 
+			*/
+			let formObj = {};
+			$.each(formAry, function(idx, tag){
+				// tag) { name : "employeeId", value : "100"} 
+				formObj[tag.name] = tag.value; // 이 코드는 JQueary가 아닌 자바스크립트꺼임
+												// 원래대로하면 너무 복잡해져서 변수가 가진 값을 필드명에 강제로 집어넣는 것.
+				// formObj["employeeId"] = "100";
+			});
+			
+			return formObj; /* = { "employeeId" : 100, "lastName" : "King", ...}  */
+			
+		}
+	</script>
+</body>
+</html>
