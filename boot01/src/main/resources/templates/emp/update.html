@@ -56,6 +56,9 @@
 				contentType : 'application/json', 
 				data:JSON.stringify(dataObj)
 				// JSON.stringify와 application/json는 한 몸. 함께 움직인다.
+				/*beforeSend: function (xhr) {
+					xhr.setRequestHeader(csrfHeader, csrfToken);
+				}*/
 			})
 			.done((result)=>{
 				console.log(result);

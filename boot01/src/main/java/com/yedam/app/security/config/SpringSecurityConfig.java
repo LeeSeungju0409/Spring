@@ -19,7 +19,7 @@ public class SpringSecurityConfig {
 		return new BCryptPasswordEncoder(); // 시큐리티는 무조건 암호화. 기본값은 거절. 원하는걸 빈으로 등록해야 함.// 모든 비밀번호는 이 인코더를 기반으로 처리한다는 뜻.
 											// BCrypt: 단방향 해쉬 알고리즘. 암호화됐지만 복포화된 마킹. 복구가 안됨. // 일반적으로 가장 많이 사용하는 알고리즘의 클래스.
 	}
-	
+	/*		
 	// 기본적으로 해보는 테스트
 	@Bean // 메모리상 인증정보 등록 => 테스트 전용
 	InMemoryUserDetailsManager inMemoryUserDetailsService() {
@@ -37,12 +37,13 @@ public class SpringSecurityConfig {
 		= User.builder() 
 				.username("admin1")
 				.password(passwordEncoder().encode("1234"))
-				//.roles("ADMIN") // ROLE_ADMIN
-			  .authorities("ROLE_ADMIN")
+				//.roles("ADMIN") // ROLE_ADMIN // 이것도 복수니까 여러개 가능.
+				.authorities("ROLE_ADMIN", "ROLE_USER") // 복수이니까 한 사람이 하나만이 아닌 여러 개 권한 가지는 것 가능.
 				.build();
 		return new InMemoryUserDetailsManager(user, admin);
 	}
-	
+	*/
+
 	// 인증 및 인가
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,15 +52,19 @@ public class SpringSecurityConfig {
 		http
 			.authorizeHttpRequests( authrize 
 					-> authrize
-					.requestMatchers("/", "/all").permitAll() //permitAll: 모두 사용할 수 있도록. 인증 안받는 대상. // /** 슬러시 밑에 하위 경로 모두 적용하겠다. -> 그냥 다 무시하고 접근가능. 그래서 그냥 /만 넣었음.
-					.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")// hasRole: 특정권한 가질때만 가능하도록. hasAnyRole : 하나만 들고있으면 됨.
-					.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-					.anyRequest().authenticated() //anyRequest : 위에 정의된 걸(requestMatchers) 빼고 나머지 부분에 대해 일괄 처리. / authenticated: 권한 부여받은 사람들.
+					.requestMatchers("/", "/all").permitAll() //permitAll: 모두 사용할 수 있도록. 인증 안받는 대상. // /** 슬러시 밑에 하위 경로 모두 적용하겠다. -> 그냥 다 무시하고 접근가능. 그래서 그냥 /만 넣었음. 이렇게 되면 밑에 있는 requestMatcher이 안돈다.
+					.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")// hasRole: 특정권한 가질때만 가능하도록. hasAnyRole : 하나만.
+					.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // hasAuthority: 
+					.anyRequest().authenticated() //anyRequest : 위에 정의된 걸(requestMatchers) 빼고 나머지 부분에 대해 일괄 처리. / authenticated: 관리자 권한. 권한 무시
 					)
 			.formLogin(formlogin -> formlogin
-					.defaultSuccessUrl("/all"))
+					.defaultSuccessUrl("/all")) // 성공 시 리다이렉트 경로.
+			//.logout() -> 이건 팝업?을 보면 쓰지말라고 적혀있음. 그래서 그 표시가 없는 밑에방식으로 쓴다.
 			.logout(logout -> logout
-					.logoutSuccessUrl("/all"));
+					.logoutSuccessUrl("/all")
+					.invalidateHttpSession(true));
+		
+		http.csrf(csrf -> csrf.disable());//csrf끄기
 		
 		return http.build(); // build를 호출하면 SecurityFilterChain이 완성.
 	}
