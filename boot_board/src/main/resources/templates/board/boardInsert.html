@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{common/layouts/default_layout}"
+	layout:fragment="Content">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div class="text-center">
+		<form name="insertForm"
+			th:action="@{/boardInsert}" method="post" >
+		<h3>게시글 등록</h3>
+		<table class="table">
+			<tr>
+				<th>제목</th>
+				<td><input type="text" name="title"></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><input type="text" name="writer"></td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td><textarea name="contents"></textarea></td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<!-- /images/cat.jpg -->
+				<td><input type="text" name="image"></td>
+			</tr>
+			<tr><!-- 레그데이트 위에 포멧 없으니까 순수 유틸데이트니까 슬러시 이용한 포멧만 인정. -->
+				<th>작성일자</th><!-- yyyy/MM/dd -->
+				<td><input type="text" name="regdate" placeholder="yyyy/MM/dd"></td><!-- @DateTimeFormat했었으면 date로 했음. -->
+			</tr>
+			</th:block>
+		</table>
+		<button type="submit">등록</button>
+		</form>
+	</div>
+	<script>
+		//submit을 하기 전 제목, 작성자, 작성일자
+
+		$(insertForm).on('submit', boardInsertHandler);
+
+		function boardInsertHandler(event) {
+			event.preventDefault(); //submit 잠시 stop 거는 것.
+
+			let title = $('form [name="title"]');
+			if (title.val() == '') {
+				alert('제목이 입력되지 않았습니다.');
+				title.focus();
+				return; // 함수 종료. 이벤트핸들러 진행시키지 않겠다.
+			}
+
+			let writer = $('form [name="writer"]');
+			if (writer.val() == '') {
+				alert('작성자가 입력되지 않았습니다.');
+				writer.focus();
+				return; // 함수 종료. 이벤트핸들러 진행시키지 않겠다.
+			}
+
+			let regdate = $('form [name="regdate"]');
+			if (regdate.val() == '') {
+				alert('작성일자가 입력되지 않았습니다.');
+				regdate.focus();
+				return; // 함수 종료. 이벤트핸들러 진행시키지 않겠다.
+			}
+
+			alert('게시글이 등록되었습니다.');
+			insertForm.submit(); // 중단됐던거 다시 실행.
+		}
+	</script>
+
+</body>
+</html>

@@ -41,7 +41,9 @@
 		</table>
 	</div>
 	<script>
+	// contextpath 사용. 
 		const context = $('meta[name="ctxPath"]').attr('value'); // val();
+		//메타태그를 생성해서 메타태그를 가진 정보를 이용해서 값을 불러오는 코드.
 		$('tbody > tr').on('click', function(event) {
 			let trTag = event.currentTarget;
 			let eid = $(trTag).children().eq(1).text(); // tr태그 안에 있는 두 번째를 찾음.
