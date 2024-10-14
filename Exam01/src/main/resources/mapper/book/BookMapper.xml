@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.book.mapper.BookMapper">
+	<!-- 전체 조회 -->
+	<select id="selectBookAll" resultType="BookVO">
+		SELECT book_no
+		, book_name
+		, book_coverimg
+		, book_date
+		, book_price
+		, book_publisher
+		, book_info
+		FROM book_tbl_06
+		ORDER BY book_no
+	</select>
+
+	<select id="selectRentAll" resultType="BookVO">
+		SELECT rent_tbl_06.rent_no
+		, book_tbl_06.book_no
+		, rent_tbl_06.rent_price
+		, rent_tbl_06.rent_date
+		, rent_tbl_06.rent_status
+		FROM rent_tbl_06 JOIN book_tbl_06
+						 ON rent_tbl_06.book_no = book_tbl_06.book_no
+
+		
+	</select>	
+
+	<!-- 등록 -->
+	<insert id="insertBookInfo" parameterType="BookVO">
+		<selectKey keyProperty="bookNo"
+			resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(book_no), 100) + 1
+			FROM book_tbl_06
+		</selectKey>
+		INSERT INTO book_tbl_06 (
+		 book_no
+		, book_name
+		, book_coverimg
+		, book_date
+		, book_price
+		, book_publisher
+		, book_info
+
+		)
+		VALUES (
+		#{bookNo}
+		<!-- departments_seq.NEXTVAL -->
+		, #{bookName}
+		, #{bookCoverimg}
+		, #{bookDate}
+		, #{bookPrice}
+		, #{bookPublisher}
+		, #{bookInfo}
+
+		)
+	</insert>
+</mapper>

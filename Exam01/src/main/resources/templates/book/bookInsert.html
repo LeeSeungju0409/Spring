@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="text-center">
+		<form name="insertForm"
+			th:action="@{/bookInsert}" method="post" >
+		<h3>도서 등록</h3>
+		<table class="table">
+			<tr>
+				<th>도서번호</th>
+				<td><input type="number" name="bookNo" value="${bookNo}" readonly></td>
+			</tr>
+			<tr>
+				<th>도서명</th>
+				<td><input type="text" name="bookName"></td>
+			</tr>
+			<tr>
+				<th>도서표지</th>
+				<!-- /images/cat.jpg -->
+				<td><input type="text" name="bookCoverimg"></td>
+			</tr>
+			<tr><!-- 레그데이트 위에 포멧 없으니까 순수 유틸데이트니까 슬러시 이용한 포멧만 인정. -->
+				<th>출판일자</th><!-- yyyy/MM/dd -->
+				<td><input type="text" name="bookDate" placeholder="yyyy/MM/dd"></td><!-- @DateTimeFormat했었으면 date로 했음. -->
+			</tr>
+			<tr>
+				<th>금액</th>
+				<td><input type="text" name="bookPrice"></td>
+			</tr>
+			<tr>
+				<th>출판사</th>
+				<td><input type="text" name="bookPublisher"></td>
+			</tr>
+			<tr>
+				<th>도서소개</th>
+				<td><input type="text" name="bookInfo"></td>
+			</tr>
+			</th:block>
+		</table>
+		<button type="submit">등록</button>
+		<button type="button" th:onclick="|location.href='@{/bookList}'|">조회</button>
+		</form>
+	</div>
+	<script>
+		//submit을 하기 전 제목, 작성자, 작성일자
+
+		$(insertForm).on('submit', bookInsertHandler);
+
+		function bookInsertHandler(event) {
+			event.preventDefault(); //submit 잠시 stop 거는 것.
+
+			let bookName = $('form [name="bookName"]');
+			if (bookName.val() == '') {
+				alert('도서명이 입력되지 않았습니다.');
+				bookName.focus();
+				return; // 함수 종료. 이벤트핸들러 진행시키지 않겠다.
+			}
+
+			alert('도서등록이 완료되었습니다.');
+			insertForm.submit(); // 중단됐던거 다시 실행.
+		}
+	</script>
+</body>
+</html>

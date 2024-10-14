@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<div class="text-center">
+		<h3>도서 조회/수정</h3>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>도서번호</th>
+					<th>도서명</th>
+					<th>표지</th>
+					<th>출판일자</th><!-- yyyy년 MM월 dd일 -->
+					<th>금액</th>
+					<th>출판사</th>
+					<th>도서소개</th>
+				</tr>
+			</thead>
+			<tbody>
+				<th:block th:each="info: ${books}"> <!-- info는 변수 선언. 이 부분에는 달러표현식 안씀. -->
+					<!-- BoardVO => <tr/> -->
+					<tr>
+					<!-- []: 타임리프 공간이라고 선언. -->
+						<td> [[${info.bookNo}]] </td>
+						<td> [[${info.bookName}]] </td>
+						<td> [[${info.bookCoverimg}]] </td>
+						<td> [[${#dates.format(info.bookDate, "yyyy/MM/dd")}]] </td> <!-- 내장객체 : #으로 다루는 것. -->
+						<td> [[${info.bookPrice}]] </td>
+						<td> [[${info.bookPublisher}]] </td>
+						<td> [[${info.bookInfo}]] </td>
+					</tr>
+				</th:block>
+			</tbody>
+		</table>
+	</div>
+	<script>
+		//제이쿼리 객체 생성
+		$('tbody > tr').on('click', function(event) { //제이쿼리 객체 생성 //on=addeventlistener
+			let trTag = event.currentTarget;
+			let bno = $(trTag).children().eq(0).text(); // tr태그 안에 있는 두 번째를 찾음.
+			let url = 'bookInfo?bno=' + bno;
+			location.href = url;
+		});
+	</script>
+
+</body>
+</html>

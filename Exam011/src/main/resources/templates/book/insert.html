@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/default_layout}"
+      layout:fragment="Content">
+
+<body>
+	<form name="insertForm" th:action="@{/bookInsert}" method="post" class="container mt-3 w-50">
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">도서번호</span>
+	  		<input type="number" name="bookNo" th:value="${no}" readonly class="form-control">
+		</div>
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">도서명</span>
+	  		<input type="text" name="bookName" class="form-control">
+		</div>
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">도서표지</span>
+	  		<input type="text" name="bookCoverimg" class="form-control">
+		</div>
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">출판일자</span>
+	  		<input type="text" name="bookDate" class="form-control" placeholder="yyyy/MM/dd">
+		</div>
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">금액</span>
+	  		<input type="number" name="bookPrice"  class="form-control">
+		</div>
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">출판사</span>
+	  		<input type="text" name="bookPublisher" class="form-control">
+		</div>
+		<div class="input-group mb-3">
+			<span class="input-group-text w-25">도서소개</span>
+	  		<textarea name="bookInfo" class="form-control"></textarea>
+		</div>
+		<div>
+			<button type="submit" class="btn btn-success">등록</button>
+			<button type="button" th:onclick="|location.href='@{/}'|" class="btn btn-success">목록</button>
+		</div>
+	</form>
+	<script>
+	
+
+		// $() : 선택자(Selector) - 태그 검색
+	$('form[name="insertForm"]').on('submit', function(event){ // $('form[name="insertForm"]'): 여기저기있는 form 태그 중에 insertForm을 쓰겠다.// 이벤트가 동작시 하고자 하는 작업 - function
+		// 특정 이벤트가 동작시 하고자 하는 작업
+		event.preventDefault();// 이벤트 핸들러 일시 중지.
+		// 1) 도서명 입력 유무
+		let inputTag = $('[name="bookName"]');
+		if(inputTag.val() == ''){ //value가 공백이라면('') => 입력 X
+			alert('도서명이 입력되지 않았습니다.');
+			inputTag.focus(); // 함수호출방식으로 event 강제 동작하는 것
+			return;
+			
+		}
+	
+		
+
+		// 2) 알림창(alert)
+		alert('도서등록이 완료 되었습니다.');
+		// <form/>가 가진 name 속성 값 : insertForm -- 일종의 변수처럼 동작함.
+		insertForm.submit();
+	});
+		
+	</script>
+</body>
+</html>
